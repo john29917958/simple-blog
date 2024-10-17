@@ -40,7 +40,7 @@
             <a href="/post/<%= blogPosts[i]._id %>">
               <h2 class="post-title"><%= blogPosts[i].title %></h2>
             </a>
-            <p><%- blogPosts[i].body %></p>
+            <div class="post-body"><%- blogPosts[i].previewBody %></div>
             <p class="post-meta">
               Posted by
               <a href="#!"><%= blogPosts[i].userid.username %></a>
