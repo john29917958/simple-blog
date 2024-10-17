@@ -1,14 +1,14 @@
 "use strict";
 
-const newPostController = require("./controllers/newPost");
+const newPostController = require("./controllers/post/newPost");
 const homeController = require("./controllers/home");
-const getPostController = require("./controllers/getPost");
-const storePostController = require("./controllers/storePost");
-const newUserController = require("./controllers/newUser");
-const storeUserController = require("./controllers/storeUser");
-const loginController = require("./controllers/login");
-const logoutController = require("./controllers/logout");
-const loginUserController = require("./controllers/loginUser");
+const getPostController = require("./controllers/post/getPost");
+const storePostController = require("./controllers/post/storePost");
+const newUserController = require("./controllers/user/newUser");
+const storeUserController = require("./controllers/user/storeUser");
+const loginController = require("./controllers/user/login");
+const logoutController = require("./controllers/user/logout");
+const loginUserController = require("./controllers/user/loginUser");
 const validateStorePostImageMiddleWare = require("./middleware/validateStorePostImageMiddleWare");
 const authMiddleware = require("./middleware/authMiddleware");
 const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthenticatedMiddleware");

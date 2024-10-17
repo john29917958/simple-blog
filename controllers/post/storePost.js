@@ -1,6 +1,6 @@
 "use strict";
 
-const BlogPost = require("../models/BlogPost");
+const BlogPost = require("../../models/BlogPost");
 const path = require("path");
 const fs = require("fs");
 
@@ -14,7 +14,8 @@ module.exports = async (req, res) => {
     const uploadDirPath = path.join("img", "uploads");
     const relativeUploadDirPath = path.resolve(
       __dirname,
-      "../",
+      "..",
+      "..",
       "public",
       uploadDirPath
     );
