@@ -6,7 +6,7 @@ module.exports = (req, res) => {
     title = data[0].title;
     body = data[0].body;
   }
-  res.render("create", {
+  res.render("post/create", {
     validationErrors: req.flash("validationErrors"),
     title,
     body,
