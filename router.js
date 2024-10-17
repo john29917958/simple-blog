@@ -15,10 +15,10 @@ function route(app) {
   app.get("/about", (req, res) => {
     res.render("about", { title: "About" });
   });
+  app.get("/post/new", authMiddleware(), postController.newPost);
   app.get("/post/:id", postController.getPost);
-  app.get("/posts/new", authMiddleware(), postController.newPost);
   app.post(
-    "/posts/store",
+    "/post/store",
     authMiddleware(),
     /*validateStorePostImageMiddleWare(), */ postController.storePost
   );

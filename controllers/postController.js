@@ -29,7 +29,7 @@ module.exports.storePost = async (req, res) => {
   if (!req.files || !req.files.image) {
     req.flash("validationErrors", ["Please upload a heading image"]);
     req.flash("data", req.body);
-    res.redirect("/posts/new");
+    res.redirect("/post/new");
   } else {
     const image = req.files.image;
     const uploadDirPath = path.join("img", "uploads");
@@ -60,7 +60,7 @@ module.exports.storePost = async (req, res) => {
           );
           req.flash("validationErrors", validationErrors);
           req.flash("data", req.body);
-          res.redirect("/posts/new");
+          res.redirect("/post/new");
         }
       );
     });
