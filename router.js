@@ -2,11 +2,7 @@
 
 const homeController = require("./controllers/home");
 const postController = require("./controllers/postController");
-const newUserController = require("./controllers/user/newUser");
-const storeUserController = require("./controllers/user/storeUser");
-const loginController = require("./controllers/user/login");
-const logoutController = require("./controllers/user/logout");
-const loginUserController = require("./controllers/user/loginUser");
+const userController = require("./controllers/userController");
 const validateStorePostImageMiddleWare = require("./middleware/validateStorePostImageMiddleWare");
 const authMiddleware = require("./middleware/authMiddleware");
 const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthenticatedMiddleware");
@@ -29,19 +25,23 @@ function route(app) {
   app.get(
     "/auth/register",
     redirectIfAuthenticatedMiddleware(),
-    newUserController
+    userController.newUser
   );
-  app.get("/auth/login", redirectIfAuthenticatedMiddleware(), loginController);
-  app.get("/auth/logout", authMiddleware(), logoutController);
+  app.get(
+    "/auth/login",
+    redirectIfAuthenticatedMiddleware(),
+    userController.login
+  );
+  app.get("/auth/logout", authMiddleware(), userController.logout);
   app.post(
     "/users/register",
     redirectIfAuthenticatedMiddleware(),
-    storeUserController
+    userController.storeUser
   );
   app.post(
     "/users/login",
     redirectIfAuthenticatedMiddleware(),
-    loginUserController
+    userController.loginUser
   );
 }
 
