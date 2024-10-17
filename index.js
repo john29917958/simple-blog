@@ -56,6 +56,8 @@ app.get(
   redirectIfAuthenticatedMiddleware(),
   newUserController
 );
+app.get("/auth/login", redirectIfAuthenticatedMiddleware(), loginController);
+app.get("/auth/logout", authMiddleware(), logoutController);
 app.post(
   "/users/register",
   redirectIfAuthenticatedMiddleware(),
@@ -66,8 +68,6 @@ app.post(
   redirectIfAuthenticatedMiddleware(),
   loginUserController
 );
-app.get("/auth/login", redirectIfAuthenticatedMiddleware(), loginController);
-app.get("/auth/logout", authMiddleware(), logoutController);
 app.use((req, res) => res.render("notfound", { title: "Not Found" }));
 
 let port = process.env.PORT || 4000;

@@ -4,7 +4,7 @@ module.exports = (req, res) => {
   if (data && data.length > 0) {
     username = data[0].username;
   }
-  res.render("login", {
+  res.render("user/login", {
     validationError: req.flash("validationError"),
     username,
     title: "Login",

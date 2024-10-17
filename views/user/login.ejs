@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("layouts/header"); -%>
+<%- include("../layouts/header"); -%>
 
 <body>
-  <%- include("layouts/navbar"); -%>
+  <%- include("../layouts/navbar"); -%>
   <!-- Page Header-->
   <header class="masthead" style="background-image: url('/img/contact-bg.jpg')">
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
           <div class="page-heading">
-            <h1>Register A New Account</h1>
+            <h1>Login</h1>
           </div>
         </div>
       </div>
@@ -20,16 +20,16 @@
   <div class="container mb-4">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <% if (errors && errors.length > 0) { %>
+        <% if (validationError) { %>
         <ul class="list-group">
-          <% for (var i = 0; i < errors.length; i++) { %>
+          <% for (let i = 0; i < validationError.length; i++) { %>
           <li class="list-group-item list-group-item-danger">
-            <%= errors[i] %>
+            <%= validationError[i] %>
           </li>
           <% } %>
         </ul>
         <% } %>
-        <form action="/users/register" method="POST" enctype="multipart/form-data">
+        <form action="/users/login" method="POST" enctype="multipart/form-data">
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="title">User Name</label>
@@ -39,21 +39,21 @@
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="password">Password</label>
-              <input class="form-control" type="password" name="password" value="<%= password %>" id="password" placeholder="Password" />
+              <input class="form-control" type="password" name="password" id="password" placeholder="Password" />
             </div>
           </div>
           <br />
           <div class="form-group">
             <button class="btn btn-primary" type="submit">
-              Register
+              Login
             </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <%- include("layouts/footer"); -%>
-  <%- include("layouts/scripts"); -%>
+  <%- include("../layouts/footer"); -%>
+  <%- include("../layouts/scripts"); -%>
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
   <!-- * *                               SB Forms JS                               * *-->
   <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
