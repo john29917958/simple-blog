@@ -1,9 +1,7 @@
 "use strict";
 
-const newPostController = require("./controllers/post/newPost");
 const homeController = require("./controllers/home");
-const getPostController = require("./controllers/post/getPost");
-const storePostController = require("./controllers/post/storePost");
+const postController = require("./controllers/postController");
 const newUserController = require("./controllers/user/newUser");
 const storeUserController = require("./controllers/user/storeUser");
 const loginController = require("./controllers/user/login");
@@ -21,12 +19,12 @@ function route(app) {
   app.get("/about", (req, res) => {
     res.render("about", { title: "About" });
   });
-  app.get("/post/:id", getPostController);
-  app.get("/posts/new", authMiddleware(), newPostController);
+  app.get("/post/:id", postController.getPost);
+  app.get("/posts/new", authMiddleware(), postController.newPost);
   app.post(
     "/posts/store",
     authMiddleware(),
-    /*validateStorePostImageMiddleWare(), */ storePostController
+    /*validateStorePostImageMiddleWare(), */ postController.storePost
   );
   app.get(
     "/auth/register",
