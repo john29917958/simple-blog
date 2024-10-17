@@ -1,5 +1,6 @@
 const BlogPost = require("../models/BlogPost");
 const path = require("path");
+const fs = require("fs");
 
 module.exports = async (req, res) => {
   if (!req.files || !req.files.image) {
@@ -8,27 +9,37 @@ module.exports = async (req, res) => {
     res.redirect("/posts/new");
   } else {
     const image = req.files.image;
-    image.mv(
-      path.resolve(__dirname, "../", "public/img", image.name),
-      (error) => {
-        BlogPost.create({
-          ...req.body,
-          image: "/img/" + image.name,
-          userid: req.session.userId,
-        }).then(
-          (blogPost) => {
-            res.redirect("/");
-          },
-          (error) => {
-            const validationErrors = Object.keys(error.errors).map(
-              (key) => error.errors[key].message
-            );
-            req.flash("validationErrors", validationErrors);
-            req.flash("data", req.body);
-            res.redirect("/posts/new");
-          }
-        );
-      }
+    const uploadDirPath = path.join("img", "uploads");
+    const relativeUploadDirPath = path.resolve(
+      __dirname,
+      "../",
+      "public",
+      uploadDirPath
     );
+    if (!fs.existsSync(relativeUploadDirPath)) {
+      fs.mkdirSync(relativeUploadDirPath);
+    }
+    const relativeUploadPath = path.join(relativeUploadDirPath, image.name);
+    const imageLinkPath = path.join("/", uploadDirPath, image.name);
+
+    image.mv(relativeUploadPath, (error) => {
+      BlogPost.create({
+        ...req.body,
+        image: imageLinkPath,
+        userid: req.session.userId,
+      }).then(
+        (blogPost) => {
+          res.redirect("/");
+        },
+        (error) => {
+          const validationErrors = Object.keys(error.errors).map(
+            (key) => error.errors[key].message
+          );
+          req.flash("validationErrors", validationErrors);
+          req.flash("data", req.body);
+          res.redirect("/posts/new");
+        }
+      );
+    });
   }
 };
