@@ -7,5 +7,6 @@ module.exports = (req, res) => {
   res.render("login", {
     validationError: req.flash("validationError"),
     username,
+    title: "Login",
   });
 };

@@ -19,7 +19,8 @@ module.exports = async (req, res) => {
   addPreviewBodies(blogPosts);
 
   res.render("index", {
-    blogPosts,
+    blogPosts: blogPosts,
+    title: "Home",
   });
 };
 

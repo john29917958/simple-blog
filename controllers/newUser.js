@@ -11,5 +11,6 @@ module.exports = (req, res) => {
     errors: req.flash("validationErrors"),
     username,
     password,
+    title: "Register"
   });
 };

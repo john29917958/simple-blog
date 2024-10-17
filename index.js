@@ -37,10 +37,10 @@ app.set("view engine", "ejs");
 
 app.get("/", homeController);
 app.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render("contact", { title: "Contact" });
 });
 app.get("/about", (req, res) => {
-  res.render("about");
+  res.render("about", { title: "About" });
 });
 app.get("/post/:id", getPostController);
 app.get("/posts/new", authMiddleware(), newPostController);
@@ -66,7 +66,7 @@ app.post(
 );
 app.get("/auth/login", redirectIfAuthenticatedMiddleware(), loginController);
 app.get("/auth/logout", authMiddleware(), logoutController);
-app.use((req, res) => res.render("notfound"));
+app.use((req, res) => res.render("notfound", { title: "Not Found" }));
 
 let port = process.env.PORT || 4000;
 app.listen(port, () => {
