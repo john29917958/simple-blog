@@ -11,6 +11,7 @@ module.exports = async (req, res) => {
       },
     ],
   })
+    .sort({ datePosted: -1 })
     .populate("userid")
     .exec();
   res.render("index", {
