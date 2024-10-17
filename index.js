@@ -20,8 +20,7 @@ const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthen
 global.loggedIn = null;
 
 mongoose.connect(
-  "mongodb+srv://john29917958:J%3B%40y%23tl%400929@cluster0.x3kitow.mongodb.net/my_database",
-  { useNewUrlParser: true }
+  "mongodb+srv://john29917958:J%3B%40y%23tl%400929@cluster0.x3kitow.mongodb.net/my_database"
 );
 
 const app = new express();
