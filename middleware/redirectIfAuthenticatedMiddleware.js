@@ -1,3 +1,5 @@
+"use strict";
+
 function redirectIfAuthenticatedMiddleware() {
   return (req, res, next) => {
     if (req.session.userId) {

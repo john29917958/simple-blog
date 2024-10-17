@@ -1,3 +1,5 @@
+"use strict";
+
 /*!
  * Start Bootstrap - Clean Blog v6.0.9 (https://startbootstrap.com/theme/clean-blog)
  * Copyright 2013-2023 Start Bootstrap

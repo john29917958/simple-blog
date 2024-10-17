@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = (req, res) => {
   let username = "";
   const data = req.flash("data");

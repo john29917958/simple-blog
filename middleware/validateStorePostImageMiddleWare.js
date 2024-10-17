@@ -1,3 +1,5 @@
+"use strict";
+
 const validateStorePostImageMiddleWare = () => {
   return (req, res, next) => {
     if (req.files === null) {

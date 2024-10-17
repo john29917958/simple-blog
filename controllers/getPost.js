@@ -1,3 +1,5 @@
+"use strict";
+
 const BlogPost = require("../models/BlogPost");
 
 module.exports = async (req, res) => {

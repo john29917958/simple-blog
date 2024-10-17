@@ -1,3 +1,5 @@
+"use strict";
+
 const BlogPost = require("../models/BlogPost");
 const path = require("path");
 const fs = require("fs");

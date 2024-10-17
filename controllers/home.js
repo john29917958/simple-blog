@@ -1,3 +1,5 @@
+"use strict";
+
 const BlogPost = require("../models/BlogPost");
 const htmlParser = require("node-html-parser");
 
