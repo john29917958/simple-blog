@@ -18,6 +18,8 @@ const authMiddleware = require("./middleware/authMiddleware");
 const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthenticatedMiddleware");
 
 global.loggedIn = null;
+global.appName = config.get("appName");
+
 const mongooseConnStr = config.get("database.mongooseConnStr");
 mongoose.connect(mongooseConnStr);
 
