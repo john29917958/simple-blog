@@ -36,7 +36,6 @@ module.exports.storePost = async (req, res) => {
     const relativeUploadDirPath = path.resolve(
       __dirname,
       "..",
-      "..",
       "public",
       uploadDirPath
     );
