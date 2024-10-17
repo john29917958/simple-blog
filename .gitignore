@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 public/img/uploads
+config/**
+!config/example.json

@@ -1,8 +1,8 @@
 const express = require("express");
 const expressSession = require("express-session");
-const ejs = require("ejs");
 const fileUpload = require("express-fileupload");
 const mongoose = require("mongoose");
+const config = require("config");
 const connectFlash = require("connect-flash");
 const newPostController = require("./controllers/newPost");
 const homeController = require("./controllers/home");
@@ -18,10 +18,8 @@ const authMiddleware = require("./middleware/authMiddleware");
 const redirectIfAuthenticatedMiddleware = require("./middleware/redirectIfAuthenticatedMiddleware");
 
 global.loggedIn = null;
-
-mongoose.connect(
-  "mongodb+srv://john29917958:J%3B%40y%23tl%400929@cluster0.x3kitow.mongodb.net/my_database"
-);
+const mongooseConnStr = config.get("database.mongooseConnStr");
+mongoose.connect(mongooseConnStr);
 
 const app = new express();
 app.use(express.static("public"));
