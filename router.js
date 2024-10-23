@@ -17,6 +17,7 @@ function route(app) {
   });
   app.get("/post/new", authMiddleware(), postController.newPost);
   app.get("/post/:id", postController.getPost);
+  app.post("/post/:id/delete", postController.destroy);
   app.post(
     "/post/store",
     authMiddleware(),

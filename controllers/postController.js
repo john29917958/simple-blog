@@ -66,3 +66,9 @@ module.exports.storePost = async (req, res) => {
     });
   }
 };
+
+module.exports.destroy = async (req, res) => {
+  const postId = req.params.id;
+  await BlogPost.findByIdAndDelete(postId);
+  res.redirect("/");
+};
