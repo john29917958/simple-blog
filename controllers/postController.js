@@ -67,6 +67,31 @@ module.exports.storePost = async (req, res) => {
   }
 };
 
+module.exports.editPost = async (req, res) => {
+  const post = await BlogPost.findById(req.params.id);
+  res.render("post/edit", {
+    blogPost: post,
+    title: "Edit",
+    createPost: true,
+    validationErrors: {},
+  });
+};
+
+module.exports.updatePost = async (req, res) => {
+  BlogPost.findByIdAndUpdate(req.params.id, {
+    title: req.body.title,
+    body: req.body.body,
+    dateUpdated: new Date(),
+  }).then(
+    () => {
+      res.redirect("/post/" + req.params.id);
+    },
+    (error) => {
+      console.log("Update post error: ", error);
+    }
+  );
+};
+
 module.exports.destroy = async (req, res) => {
   const postId = req.params.id;
   const post = await BlogPost.findById(postId);

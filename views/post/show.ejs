@@ -33,6 +33,9 @@
             <% if (blogPost.userid._id.toString() === loggedIn) { %>
             <hr />
             <div class="mt-4">
+              <a class="btn btn-primary" href="/post/<%= blogPost.id %>/edit"
+                >Edit</a
+              >
               <form
                 class="d-inline"
                 action="/post/<%= blogPost.id%>/delete"
