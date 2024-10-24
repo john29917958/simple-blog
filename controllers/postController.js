@@ -31,27 +31,22 @@ module.exports.storePost = async (req, res) => {
     req.flash("data", req.body);
     res.redirect("/post/new");
   } else {
-    const image = req.files.image;
-    const uploadDirPath = path.join("img", "uploads");
-    const relativeUploadDirPath = path.resolve(
-      __dirname,
-      "..",
-      "public",
-      uploadDirPath
-    );
-    if (!fs.existsSync(relativeUploadDirPath)) {
-      fs.mkdirSync(relativeUploadDirPath);
-    }
-    const relativeUploadPath = path.join(relativeUploadDirPath, image.name);
-    const imageLinkPath = path.join("/", uploadDirPath, image.name);
-
-    image.mv(relativeUploadPath, (error) => {
-      BlogPost.create({
-        ...req.body,
-        image: imageLinkPath,
-        userid: req.session.userId,
-      }).then(
-        (blogPost) => {
+    handleUploadImage(req.files.image)
+      .then(
+        (imageUploadLink) => {
+          return BlogPost.create({
+            ...req.body,
+            image: imageUploadLink,
+            userid: req.session.userId,
+          });
+        },
+        (error) => {
+          // TODO: Handle upload image failure here.
+          console.log("Upload image failed: ", error);
+        }
+      )
+      .then(
+        () => {
           res.redirect("/");
         },
         (error) => {
@@ -63,7 +58,6 @@ module.exports.storePost = async (req, res) => {
           res.redirect("/post/new");
         }
       );
-    });
   }
 };
 
@@ -104,3 +98,28 @@ module.exports.destroy = async (req, res) => {
   fs.unlink(postImagePath, () => {});
   res.redirect("/");
 };
+
+function handleUploadImage(image) {
+  const uploadDirPath = path.join("img", "uploads");
+  const relativeUploadDirPath = path.resolve(
+    __dirname,
+    "..",
+    "public",
+    uploadDirPath
+  );
+  if (!fs.existsSync(relativeUploadDirPath)) {
+    fs.mkdirSync(relativeUploadDirPath);
+  }
+  const relativeUploadPath = path.join(relativeUploadDirPath, image.name);
+  const imageLinkPath = path.join("/", uploadDirPath, image.name);
+  const imageMovedPromise = new Promise((resolve, reject) => {
+    image.mv(relativeUploadPath, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(imageLinkPath);
+      }
+    });
+  });
+  return imageMovedPromise;
+}
