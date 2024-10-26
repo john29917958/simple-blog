@@ -62,28 +62,53 @@ module.exports.storePost = async (req, res) => {
 };
 
 module.exports.editPost = async (req, res) => {
-  const post = await BlogPost.findById(req.params.id);
+  const post = await getPostViewData(req.params.id);
+  setPreviousDataToPost(req.flash("data"), post);
   res.render("post/edit", {
     blogPost: post,
     title: "Edit",
     createPost: true,
-    validationErrors: {},
+    validationErrors: req.flash("validationErrors"),
   });
 };
 
 module.exports.updatePost = async (req, res) => {
-  BlogPost.findByIdAndUpdate(req.params.id, {
-    title: req.body.title,
-    body: req.body.body,
-    dateUpdated: new Date(),
-  }).then(
-    () => {
-      res.redirect("/post/" + req.params.id);
-    },
-    (error) => {
-      console.log("Update post error: ", error);
+  if (req.files && req.files.image) {
+    handleUploadImage(req.files.image).then(updateBlogPost, (error) => {
+      req.flash("validationErrors", [
+        "Failed to upload the image, please try again later.",
+      ]);
+      console.log("Upload updated image failed: ", error);
+      res.redirect("/post/" + req.params.id + "/edit");
+    });
+  } else {
+    updateBlogPost();
+  }
+
+  function updateBlogPost(imageUploadLink) {
+    var updateData = {
+      title: req.body.title.trim(),
+      body: req.body.body.trim(),
+      dateUpdated: new Date(),
+    };
+    if (imageUploadLink) {
+      updateData.image = imageUploadLink;
     }
-  );
+    BlogPost.findByIdAndUpdate(req.params.id, updateData, {
+      runValidators: true,
+    }).then(
+      () => {
+        res.redirect("/post/" + req.params.id);
+      },
+      (error) => {
+        console.log("Update post error: ", error);
+        const validationErrors = getValiationErrorMessages(error);
+        req.flash("validationErrors", validationErrors);
+        req.flash("data", req.body);
+        res.redirect("/post/" + req.params.id + "/edit");
+      }
+    );
+  }
 };
 
 module.exports.destroy = async (req, res) => {
@@ -98,6 +123,24 @@ module.exports.destroy = async (req, res) => {
   fs.unlink(postImagePath, () => {});
   res.redirect("/");
 };
+
+async function getPostViewData(id) {
+  const postEntity = await BlogPost.findById(id);
+  const post = {
+    id: id,
+    title: postEntity.title,
+    body: postEntity.body,
+    image: postEntity.image,
+  };
+  return post;
+}
+
+function setPreviousDataToPost(prevData, post) {
+  if (prevData != null && prevData.length > 0) {
+    post.title = prevData[0].title;
+    post.body = prevData[0].body;
+  }
+}
 
 function handleUploadImage(image) {
   const uploadDirPath = path.join("img", "uploads");
@@ -122,4 +165,11 @@ function handleUploadImage(image) {
     });
   });
   return imageMovedPromise;
+}
+
+function getValiationErrorMessages(error) {
+  const validationErrors = Object.keys(error.errors).map(
+    (key) => error.errors[key].message
+  );
+  return validationErrors;
 }
