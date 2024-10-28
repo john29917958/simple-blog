@@ -113,11 +113,7 @@ module.exports.destroy = async (req, res) => {
   const postId = req.params.id;
   const post = await BlogPost.findById(postId);
   await BlogPost.findByIdAndDelete(postId);
-  let postImageUrl = post.image;
-  if (postImageUrl.startsWith("/")) {
-    postImageUrl = postImageUrl.substring(1);
-  }
-  const postImagePath = path.resolve(__dirname, "..", "public", postImageUrl);
+  const postImagePath = getPostImageAbsPath(post.image);
   fs.unlink(postImagePath, () => {});
   res.redirect("/");
 };
