@@ -1,81 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("../layouts/header"); -%>
+  <%- include("../layouts/header"); -%>
 
-<body>
-  <%- include("../layouts/navbar"); -%>
-  <!-- Page Header-->
-  <header class="masthead" style="background-image: url('/img/contact-bg.jpg')">
-    <div class="container position-relative px-4 px-lg-5">
-      <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          <div class="page-heading">
-            <h1>New Blog Post</h1>
+  <body>
+    <%- include("../layouts/navbar"); -%>
+    <!-- Page Header-->
+    <header
+      class="masthead"
+      style="background-image: url('/img/contact-bg.jpg')"
+    >
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="page-heading">
+              <h1>New Blog Post</h1>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </header>
-  <!-- Main Content-->
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <% if (validationErrors && validationErrors.length > 0) { %>
-        <ul class="list-group">
-          <% for (var i = 0; i < validationErrors.length; i++) { %>
-          <li class="list-group-item list-group-item-danger">
-            <%= validationErrors[i] %>
-          </li>
+    </header>
+    <!-- Main Content-->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <% if (validationErrors && validationErrors.length > 0) { %>
+          <ul class="list-group">
+            <% for (var i = 0; i < validationErrors.length; i++) { %>
+            <li class="list-group-item list-group-item-danger">
+              <%= validationErrors[i] %>
+            </li>
+            <% } %>
+          </ul>
           <% } %>
-        </ul>
-        <% } %>
-        <form action="/post/store" method="POST" enctype="multipart/form-data">
-          <div class="control-group">
-            <div class="form-group floating-label-form-group controls">
-              <label for="title">Title</label>
-              <input class="form-control" type="text" name="title" value="<%= blogPost.title %>" id="title" placeholder="Title" />
+          <form
+            action="/post/store"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label for="title">Title</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="title"
+                  value="<%= blogPost.title %>"
+                  id="title"
+                  placeholder="Title"
+                />
+              </div>
             </div>
-          </div>
-          <div class="control-group">
-            <div class="form-group floating-label-form-group controls">
-              <label for="body">Description</label>
-              <textarea class="form-control" name="body" id="body" rows="5">
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label for="body">Description</label>
+                <textarea class="form-control" name="body" id="body" rows="5">
                 <%= blogPost.body %>
-              </textarea>
+              </textarea
+                >
+              </div>
             </div>
-          </div>
-          <div class="control-group">
-            <div class="form-group floating-label-form-group-controls">
-              <label for="image">Image</label>
-              <input class="form-control" type="file" name="image" id="image" />
+            <div class="control-group">
+              <div class="form-group floating-label-form-group-controls">
+                <label for="image">Image</label>
+                <input
+                  class="form-control"
+                  type="file"
+                  name="image"
+                  id="image"
+                />
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="form-group">
-            <button class="btn btn-primary" id="sendMessage" type="submit">
-              Send
-            </button>
-          </div>
-        </form>
+            <br />
+            <div class="form-group">
+              <button class="btn btn-primary" id="sendMessage" type="submit">
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  <%- include("../layouts/footer"); -%>
-  <%- include("../layouts/scripts"); -%>
-  <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-  <!-- * *                               SB Forms JS                               * *-->
-  <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-  <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-  <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-  <script>
-    window.addEventListener("load", () => {
-      $("#body").summernote({
-        placeholder: "Start writting here...",
-        tabsize: 2,
-        height: 200,
+    <%- include("../layouts/footer"); -%>
+    <%- include("../layouts/scripts"); -%>
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <!-- * *                               SB Forms JS                               * *-->
+    <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    <script>
+      window.addEventListener("load", () => {
+        $("#body").summernote({
+          placeholder: "Start writting here...",
+          tabsize: 2,
+          height: 200,
+        });
       });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
