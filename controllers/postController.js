@@ -72,40 +72,40 @@ module.exports.editPost = async (req, res) => {
 
 module.exports.updatePost = async (req, res) => {
   if (req.files && req.files.image) {
-    handleUploadImage(req.files.image).then(updateBlogPost, (error) => {
-      req.flash("validationErrors", [
-        "Failed to upload the image, please try again later.",
-      ]);
-      res.redirect("/post/" + req.params.id + "/edit");
-      console.log("Upload updated image failed: ", error);
-    });
-  } else {
-    updateBlogPost();
-  }
-
-  function updateBlogPost(imageUploadLink) {
-    var updateData = {
-      title: req.body.title.trim(),
-      body: req.body.body.trim(),
-      dateUpdated: new Date(),
-    };
-    if (imageUploadLink) {
-      updateData.image = imageUploadLink;
-    }
-    BlogPost.findByIdAndUpdate(req.params.id, updateData, {
-      runValidators: true,
-    }).then(
-      () => {
-        res.redirect("/post/" + req.params.id);
+    handleUploadImage(req.files.image).then(
+      async (imageLink) => {
+        const post = await BlogPost.findById(req.params.id).exec();
+        const originalPostImagePath = getPostImageAbsPath(post.image);
+        updateBlogPost(req.params.id, req.body, imageLink).then(() => {
+          onUpdateSuccess();
+          fs.unlink(originalPostImagePath, () => {});
+        }, onUpdateFailure);
       },
       (error) => {
-        const validationErrors = getValiationErrorMessages(error);
-        req.flash("validationErrors", validationErrors);
-        req.flash("data", req.body);
+        req.flash("validationErrors", [
+          "Failed to upload the image, please try again later.",
+        ]);
         res.redirect("/post/" + req.params.id + "/edit");
-        console.log("Update post error: ", error);
+        console.log("Upload updated image failed: ", error);
       }
     );
+  } else {
+    updateBlogPost(req.params.id, req.body).then(
+      onUpdateSuccess,
+      onUpdateFailure
+    );
+  }
+
+  function onUpdateSuccess() {
+    res.redirect("/post/" + req.params.id);
+  }
+
+  function onUpdateFailure(error) {
+    const validationErrors = getValiationErrorMessages(error);
+    req.flash("validationErrors", validationErrors);
+    req.flash("data", req.body);
+    res.redirect("/post/" + req.params.id + "/edit");
+    console.log("Update post error: ", error);
   }
 };
 
@@ -140,6 +140,20 @@ function setPrevDataIfExistsToPost(prevData, post) {
   }
 }
 
+function updateBlogPost(id, post, imageUploadLink) {
+  var updateData = {
+    title: post.title.trim(),
+    body: post.body.trim(),
+    dateUpdated: new Date(),
+  };
+  if (imageUploadLink) {
+    updateData.image = imageUploadLink;
+  }
+  return BlogPost.findByIdAndUpdate(id, updateData, {
+    runValidators: true,
+  });
+}
+
 function handleUploadImage(image) {
   const uploadDirPath = path.join("img", "uploads");
   const relativeUploadDirPath = path.resolve(
@@ -170,4 +184,20 @@ function getValiationErrorMessages(error) {
     (key) => error.errors[key].message
   );
   return validationErrors;
+}
+
+function getPostImageAbsPath(imageLink) {
+  let normalizedImageLink = "";
+  if (imageLink.startsWith("/")) {
+    normalizedImageLink = imageLink.substring(1);
+  } else {
+    normalizedImageLink = imageLink;
+  }
+  const absImagePath = path.resolve(
+    __dirname,
+    "..",
+    "public",
+    normalizedImageLink
+  );
+  return absImagePath;
 }
