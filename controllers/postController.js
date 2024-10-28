@@ -78,8 +78,8 @@ module.exports.updatePost = async (req, res) => {
       req.flash("validationErrors", [
         "Failed to upload the image, please try again later.",
       ]);
-      console.log("Upload updated image failed: ", error);
       res.redirect("/post/" + req.params.id + "/edit");
+      console.log("Upload updated image failed: ", error);
     });
   } else {
     updateBlogPost();
@@ -101,11 +101,11 @@ module.exports.updatePost = async (req, res) => {
         res.redirect("/post/" + req.params.id);
       },
       (error) => {
-        console.log("Update post error: ", error);
         const validationErrors = getValiationErrorMessages(error);
         req.flash("validationErrors", validationErrors);
         req.flash("data", req.body);
         res.redirect("/post/" + req.params.id + "/edit");
+        console.log("Update post error: ", error);
       }
     );
   }
