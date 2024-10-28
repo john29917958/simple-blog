@@ -16,13 +16,15 @@ function route(app) {
     res.render("about", { title: "About" });
   });
   app.get("/post/new", authMiddleware(), postController.newPost);
-  app.get("/post/:id", postController.getPost);
-  app.post("/post/:id/delete", postController.destroy);
   app.post(
     "/post/store",
     authMiddleware(),
     /*validateStorePostImageMiddleWare(), */ postController.storePost
   );
+  app.get("/post/:id/edit", postController.editPost);
+  app.post("/post/:id", postController.updatePost);
+  app.get("/post/:id", postController.getPost);
+  app.post("/post/:id/delete", postController.destroy);
   app.get(
     "/auth/register",
     redirectIfAuthenticatedMiddleware(),

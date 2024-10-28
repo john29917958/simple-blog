@@ -26,10 +26,13 @@ app.use("*", (req, res, next) => {
   next();
 });
 app.set("view engine", "ejs");
-router.route(app);
-app.use((req, res) => res.render("notfound", { title: "Not Found" }));
 
-let port = process.env.PORT || 4000;
+router.route(app);
+app.use((req, res) =>
+  res.status(404).render("notfound", { title: "Not Found" })
+);
+
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });

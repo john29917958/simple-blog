@@ -7,19 +7,19 @@
     <!-- Page Header-->
     <header
       class="masthead"
-      style="background-image: url('/img/contact-bg.jpg')"
+      style="background-image: url('<%= blogPost.image %>')"
     >
       <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
             <div class="page-heading">
-              <h1>New Blog Post</h1>
+              <h1>Edit Blog Post</h1>
             </div>
           </div>
         </div>
       </div>
     </header>
-    <!-- Main Content-->
+    <!-- Main Content-->`
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
@@ -33,7 +33,7 @@
           </ul>
           <% } %>
           <form
-            action="/post/store"
+            action="/post/<%= blogPost.id %>"
             method="POST"
             enctype="multipart/form-data"
           >
@@ -88,7 +88,7 @@
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     <script>
-      window.addEventListener("load", () => {
+      window.addEventListener("load", function () {
         $("#body").summernote({
           placeholder: "Start writting here...",
           tabsize: 2,

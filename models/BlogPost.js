@@ -21,6 +21,10 @@ const BlogPostSchema = new Schema({
     type: Date,
     default: () => new Date(),
   },
+  dateUpdated: {
+    type: Date,
+    default: null,
+  },
   image: {
     type: String,
     required: [true, "Please upload an heading image"],
