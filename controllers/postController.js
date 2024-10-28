@@ -31,33 +31,33 @@ module.exports.storePost = async (req, res) => {
     req.flash("data", req.body);
     res.redirect("/post/new");
   } else {
-    handleUploadImage(req.files.image)
-      .then(
-        (imageUploadLink) => {
-          return BlogPost.create({
-            ...req.body,
-            image: imageUploadLink,
-            userid: req.session.userId,
-          });
-        },
-        (error) => {
-          // TODO: Handle upload image failure here.
-          console.log("Upload image failed: ", error);
-        }
-      )
-      .then(
-        () => {
-          res.redirect("/");
-        },
-        (error) => {
-          const validationErrors = Object.keys(error.errors).map(
-            (key) => error.errors[key].message
-          );
-          req.flash("validationErrors", validationErrors);
-          req.flash("data", req.body);
-          res.redirect("/post/new");
-        }
-      );
+    handleUploadImage(req.files.image).then(
+      (imageUploadLink) => {
+        BlogPost.create({
+          title: req.body.title.trim(),
+          body: req.body.body.trim(),
+          image: imageUploadLink,
+          userid: req.session.userId,
+        }).then(
+          () => {
+            res.redirect("/");
+          },
+          (error) => {
+            const validationErrors = getValiationErrorMessages(error);
+            req.flash("validationErrors", validationErrors);
+            req.flash("data", req.body);
+            res.redirect("/post/new");
+          }
+        );
+      },
+      (error) => {
+        req.flash("validationErrors", [
+          "Failed to upload the image, please try again later.",
+        ]);
+        res.redirect("/post/new");
+        console.log("Upload image failed: ", error);
+      }
+    );
   }
 };
 
