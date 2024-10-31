@@ -27,6 +27,7 @@ module.exports.loginUser = async (req, res) => {
           bcrypt.compare(password, user.password, (error, isSame) => {
             if (isSame) {
               req.session.userId = user._id;
+              req.session.username = user.username;
               res.redirect("/");
             } else {
               req.flash("validationError", "Incorrect password");
