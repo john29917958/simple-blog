@@ -14,7 +14,7 @@ module.exports.newPost = (req, res) => {
     title: null,
     body: null,
   };
-  setPrevDataIfExistsToPost(req.flash("data"), post);
+  setPrevDataToPost(req.flash("data"), post);
   res.render("post/create", {
     validationErrors: req.flash("validationErrors"),
     title: "New Post",
@@ -61,7 +61,7 @@ module.exports.storePost = async (req, res) => {
 
 module.exports.editPost = async (req, res) => {
   const post = await getPostViewData(req.params.id);
-  setPrevDataIfExistsToPost(req.flash("data"), post);
+  setPrevDataToPost(req.flash("data"), post);
   res.render("post/edit", {
     blogPost: post,
     title: "Edit",
@@ -129,7 +129,7 @@ async function getPostViewData(id) {
   return post;
 }
 
-function setPrevDataIfExistsToPost(prevData, post) {
+function setPrevDataToPost(prevData, post) {
   if (prevData != null && prevData.length > 0) {
     post.title = prevData[0].title;
     post.body = prevData[0].body;
