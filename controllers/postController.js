@@ -29,7 +29,7 @@ module.exports.storePost = async (req, res) => {
     req.flash("data", req.body);
     res.redirect("/post/new");
   } else {
-    handleUploadImage(req.files.image, req.session.username).then(
+    handleUploadImage(req.files.image, req.session.userId).then(
       (imageUploadLink) => {
         BlogPost.create({
           title: req.body.title.trim(),
@@ -72,7 +72,7 @@ module.exports.editPost = async (req, res) => {
 
 module.exports.updatePost = async (req, res) => {
   if (req.files && req.files.image) {
-    handleUploadImage(req.files.image, req.session.username).then(
+    handleUploadImage(req.files.image, req.session.userId).then(
       async (imageLink) => {
         const post = await BlogPost.findById(req.params.id).exec();
         const originalPostImagePath = getPostImageAbsPath(post.image);
@@ -150,7 +150,7 @@ function updateBlogPost(id, post, imageUploadLink) {
   });
 }
 
-function handleUploadImage(image, username) {
+function handleUploadImage(image, userId) {
   const uploadDirPath = path.join("img", "uploads");
   const relativeUploadDirPath = path.resolve(
     __dirname,
@@ -161,7 +161,7 @@ function handleUploadImage(image, username) {
   if (!fs.existsSync(relativeUploadDirPath)) {
     fs.mkdirSync(relativeUploadDirPath);
   }
-  const formattedImageName = getFormattedImageName(image.name, username);
+  const formattedImageName = getFormattedImageName(image.name, userId);
   const relativeUploadPath = path.join(
     relativeUploadDirPath,
     formattedImageName
@@ -179,7 +179,7 @@ function handleUploadImage(image, username) {
   return imageMovedPromise;
 }
 
-function getFormattedImageName(imageName, username) {
+function getFormattedImageName(imageName, userId) {
   const ext = path.extname(imageName);
   const currDate = new Date();
   let formattedImageName =
@@ -191,7 +191,7 @@ function getFormattedImageName(imageName, username) {
     currDate.getSeconds().toString() +
     currDate.getMilliseconds().toString() +
     "-" +
-    username;
+    userId;
   if (ext != null && ext.length > 0) {
     formattedImageName += ext;
   }
