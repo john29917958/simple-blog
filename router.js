@@ -26,8 +26,8 @@ function route(app) {
   app.get("/post/:id", postController.getPost);
   app.post("/post/:id/delete", authMiddleware(), postController.destroy);
   app.get(
-    redirectIfAuthenticatedMiddleware(),
     "/auth/register",
+    redirectIfAuthenticatedMiddleware(),
     userController.newUser
   );
   app.get(
