@@ -21,13 +21,13 @@ function route(app) {
     authMiddleware(),
     /*validateStorePostImageMiddleWare(), */ postController.storePost
   );
-  app.get("/post/:id/edit", postController.editPost);
-  app.post("/post/:id", postController.updatePost);
+  app.get("/post/:id/edit", authMiddleware(), postController.editPost);
+  app.post("/post/:id", authMiddleware(), postController.updatePost);
   app.get("/post/:id", postController.getPost);
-  app.post("/post/:id/delete", postController.destroy);
+  app.post("/post/:id/delete", authMiddleware(), postController.destroy);
   app.get(
-    "/auth/register",
     redirectIfAuthenticatedMiddleware(),
+    "/auth/register",
     userController.newUser
   );
   app.get(
