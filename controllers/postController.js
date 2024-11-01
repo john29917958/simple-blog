@@ -29,7 +29,7 @@ module.exports.storePost = async (req, res) => {
     req.flash("data", req.body);
     res.redirect("/post/new");
   } else {
-    handleUploadImage(req.files.image).then(
+    handleUploadImage(req.files.image, req.session.username).then(
       (imageUploadLink) => {
         BlogPost.create({
           title: req.body.title.trim(),
@@ -72,7 +72,7 @@ module.exports.editPost = async (req, res) => {
 
 module.exports.updatePost = async (req, res) => {
   if (req.files && req.files.image) {
-    handleUploadImage(req.files.image).then(
+    handleUploadImage(req.files.image, req.session.username).then(
       async (imageLink) => {
         const post = await BlogPost.findById(req.params.id).exec();
         const originalPostImagePath = getPostImageAbsPath(post.image);
@@ -150,7 +150,7 @@ function updateBlogPost(id, post, imageUploadLink) {
   });
 }
 
-function handleUploadImage(image) {
+function handleUploadImage(image, username) {
   const uploadDirPath = path.join("img", "uploads");
   const relativeUploadDirPath = path.resolve(
     __dirname,
@@ -161,8 +161,12 @@ function handleUploadImage(image) {
   if (!fs.existsSync(relativeUploadDirPath)) {
     fs.mkdirSync(relativeUploadDirPath);
   }
-  const relativeUploadPath = path.join(relativeUploadDirPath, image.name);
-  const imageLinkPath = path.join("/", uploadDirPath, image.name);
+  const formattedImageName = getFormattedImageName(image.name, username);
+  const relativeUploadPath = path.join(
+    relativeUploadDirPath,
+    formattedImageName
+  );
+  const imageLinkPath = path.join("/", uploadDirPath, formattedImageName);
   const imageMovedPromise = new Promise((resolve, reject) => {
     image.mv(relativeUploadPath, (error) => {
       if (error) {
@@ -173,6 +177,25 @@ function handleUploadImage(image) {
     });
   });
   return imageMovedPromise;
+}
+
+function getFormattedImageName(imageName, username) {
+  const ext = path.extname(imageName);
+  const currDate = new Date();
+  let formattedImageName =
+    currDate.getFullYear().toString() +
+    (currDate.getMonth() + 1).toString() +
+    currDate.getDate().toString() +
+    currDate.getHours().toString() +
+    currDate.getMinutes().toString() +
+    currDate.getSeconds().toString() +
+    currDate.getMilliseconds().toString() +
+    "-" +
+    username;
+  if (ext != null && ext.length > 0) {
+    formattedImageName += ext;
+  }
+  return formattedImageName;
 }
 
 function getValiationErrorMessages(error) {
