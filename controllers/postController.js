@@ -3,6 +3,7 @@
 const BlogPost = require("../models/BlogPost");
 const path = require("path");
 const fs = require("fs");
+const sharp = require("sharp");
 
 module.exports.getPost = async (req, res) => {
   const blogPost = await BlogPost.findById(req.params.id).populate("userid");
@@ -152,35 +153,40 @@ function updateBlogPost(id, post, imageUploadLink) {
 
 function handleUploadImage(image, userId) {
   const uploadDirPath = path.join("img", "uploads");
-  const relativeUploadDirPath = path.resolve(
+  const absUploadDirPath = path.resolve(
     __dirname,
     "..",
     "public",
     uploadDirPath
   );
-  if (!fs.existsSync(relativeUploadDirPath)) {
-    fs.mkdirSync(relativeUploadDirPath);
-  }
-  const formattedImageName = getFormattedImageName(image.name, userId);
-  const relativeUploadPath = path.join(
-    relativeUploadDirPath,
-    formattedImageName
+  createUploadImageDirIfNotExists(absUploadDirPath);
+  const formattedImageName = getFormattedImageNameWithoutExtension(
+    image.name,
+    userId
   );
-  const imageLinkPath = path.join("/", uploadDirPath, formattedImageName);
-  const imageMovedPromise = new Promise((resolve, reject) => {
-    image.mv(relativeUploadPath, (error) => {
-      if (error) {
+  const uploadImagePath =
+    path.join(absUploadDirPath, formattedImageName) + ".jpg";
+  const imageLinkPath =
+    path.join("/", uploadDirPath, formattedImageName) + ".jpg";
+  const compressImagePromise = new Promise((resolve, reject) => {
+    compressImage(image, uploadImagePath).then(
+      resolve.bind(null, imageLinkPath),
+      (error) => {
         reject(error);
-      } else {
-        resolve(imageLinkPath);
+        console.error("Compress image failed", error);
       }
-    });
+    );
   });
-  return imageMovedPromise;
+  return compressImagePromise;
 }
 
-function getFormattedImageName(imageName, userId) {
-  const ext = path.extname(imageName);
+function createUploadImageDirIfNotExists(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
+}
+
+function getFormattedImageNameWithoutExtension(imageName, userId) {
   const currDate = new Date();
   let formattedImageName =
     currDate.getFullYear().toString() +
@@ -192,10 +198,11 @@ function getFormattedImageName(imageName, userId) {
     currDate.getMilliseconds().toString() +
     "-" +
     userId;
-  if (ext != null && ext.length > 0) {
-    formattedImageName += ext;
-  }
   return formattedImageName;
+}
+
+function compressImage(image, uploadImagePath) {
+  return sharp(image.data).jpeg({ quality: 40 }).toFile(uploadImagePath);
 }
 
 function getValiationErrorMessages(error) {
