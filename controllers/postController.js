@@ -54,7 +54,7 @@ module.exports.storePost = async (req, res) => {
           "Failed to upload the image, please try again later.",
         ]);
         res.redirect("/post/new");
-        console.log("Upload image failed: ", error);
+        console.error("Upload image failed: ", error);
       }
     );
   }
@@ -87,7 +87,7 @@ module.exports.updatePost = async (req, res) => {
           "Failed to upload the image, please try again later.",
         ]);
         res.redirect("/post/" + req.params.id + "/edit");
-        console.log("Upload updated image failed: ", error);
+        console.error("Upload updated image failed: ", error);
       }
     );
   } else {
@@ -106,7 +106,7 @@ module.exports.updatePost = async (req, res) => {
     req.flash("validationErrors", validationErrors);
     req.flash("data", req.body);
     res.redirect("/post/" + req.params.id + "/edit");
-    console.log("Update post error: ", error);
+    console.error("Update post error: ", error);
   }
 };
 
