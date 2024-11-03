@@ -4,11 +4,12 @@ const BlogPost = require("../models/BlogPost");
 const path = require("path");
 const fs = require("fs");
 const sharp = require("sharp");
+const asyncHandler = require("express-async-handler");
 
-module.exports.getPost = async (req, res) => {
+module.exports.getPost = asyncHandler(async (req, res) => {
   const blogPost = await BlogPost.findById(req.params.id).populate("userid");
   res.render("post/show", { blogPost: blogPost, title: blogPost.title });
-};
+});
 
 module.exports.newPost = (req, res) => {
   const post = {
@@ -24,7 +25,7 @@ module.exports.newPost = (req, res) => {
   });
 };
 
-module.exports.storePost = async (req, res) => {
+module.exports.storePost = asyncHandler(async (req, res) => {
   if (!req.files || !req.files.image) {
     req.flash("validationErrors", ["Please upload a heading image"]);
     req.flash("data", req.body);
@@ -58,9 +59,9 @@ module.exports.storePost = async (req, res) => {
       }
     );
   }
-};
+});
 
-module.exports.editPost = async (req, res) => {
+module.exports.editPost = asyncHandler(async (req, res) => {
   const post = await getPostViewData(req.params.id);
   setPrevDataToPost(req.flash("data"), post);
   res.render("post/edit", {
@@ -69,9 +70,9 @@ module.exports.editPost = async (req, res) => {
     createPost: true,
     validationErrors: req.flash("validationErrors"),
   });
-};
+});
 
-module.exports.updatePost = async (req, res) => {
+module.exports.updatePost = asyncHandler(async (req, res) => {
   if (req.files && req.files.image) {
     handleUploadImage(req.files.image, req.session.userId).then(
       async (imageLink) => {
@@ -108,16 +109,16 @@ module.exports.updatePost = async (req, res) => {
     res.redirect("/post/" + req.params.id + "/edit");
     console.error("Update post error: ", error);
   }
-};
+});
 
-module.exports.destroy = async (req, res) => {
+module.exports.destroy = asyncHandler(async (req, res) => {
   const postId = req.params.id;
   const post = await BlogPost.findById(postId);
   await BlogPost.findByIdAndDelete(postId);
   const postImagePath = getPostImageAbsPath(post.image);
   fs.unlink(postImagePath, () => {});
   res.redirect("/");
-};
+});
 
 async function getPostViewData(id) {
   const postEntity = await BlogPost.findById(id);

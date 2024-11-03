@@ -3,6 +3,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const path = require("path");
+const asyncHandler = require("express-async-handler");
 
 module.exports.login = (req, res) => {
   let username = "";
@@ -17,7 +18,7 @@ module.exports.login = (req, res) => {
   });
 };
 
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
   User.findOne({ username })
     .exec()
@@ -44,7 +45,7 @@ module.exports.loginUser = async (req, res) => {
         console.log("Login error: ", error);
       }
     );
-};
+});
 
 module.exports.logout = (req, res) => {
   req.session.destroy(() => {
