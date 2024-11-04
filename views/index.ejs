@@ -1,65 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-  <%- include("layouts/header"); -%>
-
-  <body>
-    <%- include("layouts/navbar"); -%>
-    <!-- Page Header-->
-    <header class="masthead" style="background-image: url('img/home-bg.jpg')">
-      <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="site-heading">
-              <h1><%= appName %></h1>
-              <span class="subheading">A Blog Made with Express.js and MongoDB</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-    <!-- Main Content-->
-    <div class="container px-4 px-lg-5">
-      <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          <form class="row gx-3 align-items-center" action="/" method="get">
-            <div class="col-sm-12 col-md">
-              <input
-                class="form-control"
-                type="text"
-                name="keywords"
-                id="keywords"
-              />
-            </div>
-            <div class="col-sm-12 col-md-auto">
-              <button class="btn btn-light" type="submit">Search</button>
-            </div>
-          </form>
-          <!-- Post preview-->
-          <% for(var i = 0; i < blogPosts.length; i++) { %>
-          <div class="post-preview">
-            <a href="/post/<%= blogPosts[i]._id %>">
-              <h2 class="post-title"><%= blogPosts[i].title %></h2>
-            </a>
-            <div class="post-body"><%- blogPosts[i].previewBody %></div>
-            <p class="post-meta">
-              Posted by
-              <a href="#!"><%= blogPosts[i].userid.username %></a>
-              on <%= blogPosts[i].datePosted.toDateString() %>
-            </p>
-          </div>
-          <% if (i !== blogPosts.length - 1) { %>
-          <!-- Divider-->
-          <hr class="my-4" />
-          <% } %> <% } %>
-          <!-- Pager-->
-          <div class="d-flex justify-content-end mb-4">
-            <a class="btn btn-primary text-uppercase" href="#!"
-              >Older Posts →</a
-            >
-          </div>
+<header class="masthead" style="background-image: url('img/home-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1><%= appName %></h1>
+          <span class="subheading"
+            >A Blog Made with Express.js and MongoDB</span
+          >
         </div>
       </div>
     </div>
-    <%- include("layouts/footer"); -%> <%- include("layouts/scripts.ejs"); -%>
-  </body>
-</html>
+  </div>
+</header>
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      <form class="row gx-3 align-items-center" action="/" method="get">
+        <div class="col-sm-12 col-md">
+          <input
+            class="form-control"
+            type="text"
+            name="keywords"
+            id="keywords"
+          />
+        </div>
+        <div class="col-sm-12 col-md-auto">
+          <button class="btn btn-light" type="submit">Search</button>
+        </div>
+      </form>
+      <!-- Post preview-->
+      <% for(var i = 0; i < blogPosts.length; i++) { %>
+      <div class="post-preview">
+        <a href="/post/<%= blogPosts[i]._id %>">
+          <h2 class="post-title"><%= blogPosts[i].title %></h2>
+        </a>
+        <div class="post-body"><%- blogPosts[i].previewBody %></div>
+        <p class="post-meta">
+          Posted by
+          <a href="#!"><%= blogPosts[i].userid.username %></a>
+          on <%= blogPosts[i].datePosted.toDateString() %>
+        </p>
+      </div>
+      <% if (i !== blogPosts.length - 1) { %>
+      <!-- Divider-->
+      <hr class="my-4" />
+      <% } %>
+      <% } %>
+      <!-- Pager-->
+      <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a>
+      </div>
+    </div>
+  </div>
+</div>
