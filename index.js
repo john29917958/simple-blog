@@ -30,6 +30,8 @@ app.use("*", (req, res, next) => {
 });
 app.set("view engine", "ejs");
 app.set("layout", path.join(__dirname, "views", "layouts", "layout"));
+app.set("layout extractMetas", true);
+app.set("layout extractStyles", true);
 app.set("layout extractScripts", true);
 app.set("views", path.join(__dirname, "views"));
 
